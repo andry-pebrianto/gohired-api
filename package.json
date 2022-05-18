@@ -1,0 +1,14 @@
+{
+  "name": "gogotjob-project",
+  "version": "1.0.0",
+  "description": "Web Service untuk website GoGotJob, sebuah platform yang dapat digunakan untuk mencari pekerjaan dan/atau mencari pekerja",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ExpressJS"
+  ],
+  "author": "Andry Pebrianto",
+  "license": "MIT"
+}
