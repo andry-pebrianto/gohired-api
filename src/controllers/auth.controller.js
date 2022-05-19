@@ -83,4 +83,33 @@ module.exports = {
       });
     }
   },
+  activation: async (req, res) => {
+    try {
+      const { token } = req.params;
+      const user = await userModel.findBy('email_token', token);
+
+      if (!user.rowCount) {
+        res.send(`
+        <div>
+          <h1>Activation Failed</h1>
+          <h3>Token invalid</h3>
+        </div>`);
+        return;
+      }
+      await authModel.activateEmail(user.rows[0].id);
+      await authModel.updateToken(user.rows[0].id, '');
+
+      res.send(`
+      <div>
+        <h1>Activation Success</h1>
+        <h3>You can login now</h3>
+      </div>`);
+    } catch (error) {
+      res.send(`
+      <div>
+        <h1>Activation Failed</h1>
+        <h3>${error.message}</h3>
+      </div>`);
+    }
+  },
 };

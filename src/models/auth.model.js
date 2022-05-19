@@ -37,4 +37,16 @@ module.exports = {
       },
     );
   }),
+  activateEmail: (id) => new Promise((resolve, reject) => {
+    db.query(
+      'UPDATE users SET is_verified=true WHERE id=$1',
+      [id],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
 };
