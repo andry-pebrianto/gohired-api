@@ -61,4 +61,16 @@ module.exports = {
       },
     );
   }),
+  resetPassword: (id, password) => new Promise((resolve, reject) => {
+    db.query(
+      'UPDATE users SET password=$1 WHERE id=$2',
+      [password, id],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
 };

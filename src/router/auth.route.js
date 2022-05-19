@@ -2,8 +2,9 @@ const express = require('express');
 const validation = require('../validations/auth.validation');
 const runValidation = require('../middlewares/runValidation');
 const {
-  register, activation, login,
+  register, activation, login, forgot, reset,
 } = require('../controllers/auth.controller');
+const { isVerified } = require('../middlewares/authorization');
 
 const router = express.Router();
 
@@ -11,6 +12,8 @@ router
   .post('/auth/register/worker', validation.registerWorker, runValidation, register)
   .post('/auth/register/recruiter', validation.registerRecruiter, runValidation, register)
   .get('/auth/activation/:token', activation)
-  .post('/auth/login', validation.login, runValidation, login);
+  .post('/auth/login', isVerified, validation.login, runValidation, login)
+  .post('/auth/forgot', isVerified, validation.forgot, runValidation, forgot)
+  .post('/auth/reset/:token', isVerified, validation.reset, runValidation, reset);
 
 module.exports = router;

@@ -8,8 +8,11 @@ const recruiterModel = require('../models/recruiter.model');
 const { success, failed } = require('../utils/createResponse');
 const sendEmail = require('../utils/email/sendEmail');
 const activateAccountEmail = require('../utils/email/activateAccountEmail');
+const resetAccountEmail = require('../utils/email/resetAccountEmail');
 const jwtToken = require('../utils/generateJwtToken');
-const { APP_NAME, EMAIL_FROM, API_URL } = require('../utils/env');
+const {
+  APP_NAME, EMAIL_FROM, API_URL, CLIENT_URL,
+} = require('../utils/env');
 
 module.exports = {
   register: async (req, res) => {
@@ -144,6 +147,68 @@ module.exports = {
         code: 401,
         payload: 'Wrong Email or Password',
         message: 'Login Failed',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  forgot: async (req, res) => {
+    try {
+      const user = await userModel.findBy('email', req.body.email);
+      if (user.rowCount) {
+        const token = crypto.randomBytes(30).toString('hex');
+        // update email token
+        await authModel.updateToken(user.rows[0].id, token);
+
+        // send email for reset password
+        const templateEmail = {
+          from: `"${APP_NAME}" <${EMAIL_FROM}>`,
+          to: req.body.email.toLowerCase(),
+          subject: 'Reset Your Password!',
+          html: resetAccountEmail(`${CLIENT_URL}/auth/reset/${token}`),
+        };
+        sendEmail(templateEmail);
+      }
+
+      success(res, {
+        code: 200,
+        payload: null,
+        message: 'Forgot Password Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  reset: async (req, res) => {
+    try {
+      const { token } = req.params;
+      const user = await userModel.findBy('email_token', token);
+
+      if (!user.rowCount) {
+        failed(res, {
+          code: 401,
+          payload: 'Token invalid',
+          message: 'Reset Password Failed',
+        });
+        return;
+      }
+
+      const password = await bcrypt.hash(req.body.password, 10);
+      await authModel.resetPassword(user.rows[0].id, password);
+      await authModel.updateToken(user.rows[0].id, '');
+
+      success(res, {
+        code: 200,
+        payload: null,
+        message: 'Reset Password Success',
       });
     } catch (error) {
       failed(res, {
