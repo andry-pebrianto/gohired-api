@@ -23,6 +23,7 @@ module.exports = (count, page = 1, limit = 5) => {
     currentPage: page,
     dataPerPage: limit,
     totalPage: Math.ceil(count / limit),
+    totalData: parseInt(count, 10),
   };
 
   offset = (page - 1) * limit;
