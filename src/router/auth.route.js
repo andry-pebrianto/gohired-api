@@ -1,10 +1,10 @@
 const express = require('express');
+const { isVerified } = require('../middlewares/authorization');
 const validation = require('../validations/auth.validation');
 const runValidation = require('../middlewares/runValidation');
 const {
   register, activation, login, forgot, reset,
 } = require('../controllers/auth.controller');
-const { isVerified } = require('../middlewares/authorization');
 
 const router = express.Router();
 

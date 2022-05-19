@@ -5,11 +5,11 @@ const authModel = require('../models/auth.model');
 const userModel = require('../models/user.model');
 const workerModel = require('../models/worker.model');
 const recruiterModel = require('../models/recruiter.model');
-const { success, failed } = require('../utils/createResponse');
 const sendEmail = require('../utils/email/sendEmail');
 const activateAccountEmail = require('../utils/email/activateAccountEmail');
 const resetAccountEmail = require('../utils/email/resetAccountEmail');
 const jwtToken = require('../utils/generateJwtToken');
+const { success, failed } = require('../utils/createResponse');
 const {
   APP_NAME, EMAIL_FROM, API_URL, CLIENT_URL,
 } = require('../utils/env');

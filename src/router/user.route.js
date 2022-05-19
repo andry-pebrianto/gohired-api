@@ -1,6 +1,6 @@
 const express = require('express');
-const { listWorker, listRecruiter } = require('../controllers/user.controller');
 const jwtAuth = require('../middlewares/jwtAuth');
+const { listWorker, listRecruiter } = require('../controllers/user.controller');
 
 const router = express.Router();
 

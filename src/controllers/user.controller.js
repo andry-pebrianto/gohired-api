@@ -1,6 +1,6 @@
 const userModel = require('../models/user.model');
-const { success, failed } = require('../utils/createResponse');
 const createPagination = require('../utils/createPagination');
+const { success, failed } = require('../utils/createResponse');
 
 module.exports = {
   listWorker: async (req, res) => {
