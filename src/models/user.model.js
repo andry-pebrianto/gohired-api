@@ -48,4 +48,33 @@ module.exports = {
       resolve(result);
     });
   }),
+  selectAllRecruiter: (count, search = '', sortBy = '', paging) => new Promise((resolve, reject) => {
+    let base = 'SELECT';
+    if (count) {
+      base += ' COUNT(*)';
+    } else {
+      base += ' users.id, users.name, users.email, users.photo, users.address, users.phone, recruiters.position, recruiters.company_name';
+    }
+    let sql = `${base} FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.is_verified=true AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.position) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.company_name) LIKE '%'||LOWER($1)||'%' OR LOWER(users.address) LIKE '%'||LOWER($1)||'%'`;
+
+    // jika query tidak ditujukan untuk mendapatkan count
+    if (!count) {
+      // jika ada sortBy
+      if (sortBy.trim() === 'name') {
+        sql += ' ORDER BY users.name';
+      } else {
+        sql += ' ORDER BY users.created_at';
+      }
+
+      // limit & offset
+      sql += ` LIMIT ${paging.limit} OFFSET ${paging.offset}`;
+    }
+
+    db.query(sql, [search], (error, result) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(result);
+    });
+  }),
 };
