@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const userModel = require('../models/user.model');
 const createPagination = require('../utils/createPagination');
 const uploadGoogleDrive = require('../utils/uploadGoogleDrive');
@@ -162,6 +163,26 @@ module.exports = {
         });
         return;
       }
+
+      const {
+        name, address, description, phone, instagram, github, linkedin,
+      } = req.body;
+      const newSlug = name !== user.rows[0].name
+        ? `${name.toLowerCase().trim().split(' ').join('-')}-${crypto
+          .randomBytes(3)
+          .toString('hex')}`
+        : user.rows[0].slug;
+      await userModel.updateUserData(user.rows[0].id, {
+        name,
+        slug: newSlug,
+        address,
+        description,
+        phone,
+        instagram,
+        github,
+        linkedin,
+        updatedAt: new Date(),
+      });
 
       success(res, {
         code: 200,

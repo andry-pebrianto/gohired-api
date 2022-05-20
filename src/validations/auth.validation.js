@@ -12,7 +12,7 @@ const registerWorker = [
   check('email', 'Please include a valid email').isEmail(),
   check('email', 'Email maximum length is 50 characters').isLength({ max: 50 }),
   // phone
-  check('phone', 'Phone  v').not().isEmpty(),
+  check('phone', 'Phone required').not().isEmpty(),
   check('phone', 'Phone only can contains number').isNumeric(),
   check('phone', 'Phone maximum length is 13 characters').isLength({ max: 13 }),
   // password

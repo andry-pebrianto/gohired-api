@@ -113,4 +113,38 @@ module.exports = {
       },
     );
   }),
+  updateUserData: (id, data) => new Promise((resolve, reject) => {
+    const {
+      name,
+      slug,
+      address,
+      description,
+      phone,
+      instagram,
+      github,
+      linkedin, updatedAt,
+    } = data;
+
+    db.query(
+      'UPDATE users SET name=$1, slug=$2, address=$3, description=$4, phone=$5, instagram=$6, github=$7, linkedin=$8, updated_at=$9 WHERE id=$10',
+      [
+        name,
+        slug,
+        address,
+        description,
+        phone,
+        instagram,
+        github,
+        linkedin,
+        updatedAt,
+        id,
+      ],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
 };
