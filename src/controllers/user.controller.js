@@ -1,5 +1,6 @@
 const userModel = require('../models/user.model');
 const createPagination = require('../utils/createPagination');
+const deleteFile = require('../utils/deleteFile');
 const { success, failed } = require('../utils/createResponse');
 
 module.exports = {
@@ -10,10 +11,18 @@ module.exports = {
       } = req.query;
 
       // jika data yang ingin diambil adalah recruiter
-      if (req.originalUrl.split('/')[req.originalUrl.split('/').length - 1] === 'recruiter') {
+      if (
+        req.originalUrl.split('/')[req.originalUrl.split('/').length - 1]
+        === 'recruiter'
+      ) {
         const count = await userModel.selectAllRecruiter(true, search, orderBy);
         const paging = createPagination(count.rows[0].count, page, limit);
-        const users = await userModel.selectAllRecruiter(false, search, orderBy, paging);
+        const users = await userModel.selectAllRecruiter(
+          false,
+          search,
+          orderBy,
+          paging,
+        );
 
         success(res, {
           code: 200,
@@ -27,7 +36,12 @@ module.exports = {
       else {
         const count = await userModel.selectAllWorker(true, search, orderBy);
         const paging = createPagination(count.rows[0].count, page, limit);
-        const users = await userModel.selectAllWorker(false, search, orderBy, paging);
+        const users = await userModel.selectAllWorker(
+          false,
+          search,
+          orderBy,
+          paging,
+        );
 
         success(res, {
           code: 200,
@@ -53,7 +67,7 @@ module.exports = {
       if (!user.rowCount) {
         failed(res, {
           code: 404,
-          payload: `User with Id ${slug} not found`,
+          payload: `User with Slug ${slug} not found`,
           message: 'Select Detail User Failed',
         });
         return;
@@ -80,7 +94,54 @@ module.exports = {
       });
     }
   },
-  update: async (req, res) => {
-    res.json('Y');
+  updatePhoto: async (req, res) => {
+    try {
+      const { slug } = req.params;
+
+      const user = await userModel.findBy('slug', slug);
+      // jika user tidak ditemukan
+      if (!user.rowCount) {
+        // hapus jika ada upload photo
+        if (req.files) {
+          if (req.files.photo) {
+            deleteFile(req.files.photo[0].path);
+          }
+        }
+
+        failed(res, {
+          code: 404,
+          payload: `User with Slug ${slug} not found`,
+          message: 'Update User Photo Failed',
+        });
+        return;
+      }
+
+      let { photo } = user.rows[0];
+      // jika ada upload photo
+      if (req.files) {
+        if (req.files.photo) {
+          // hapus file photo jika sebelumnya sudah pernah upload
+          if (user.rows[0].photo) {
+            deleteFile(`public/photo/${user.rows[0].photo}`);
+          }
+          // mengubah photo dengan nama dari upload
+          photo = req.files.photo[0].filename;
+        }
+      }
+
+      await userModel.changePhoto(user.rows[0].id, photo);
+
+      success(res, {
+        code: 200,
+        payload: null,
+        message: 'Update User Photo Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
   },
 };

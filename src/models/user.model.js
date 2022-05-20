@@ -101,4 +101,16 @@ module.exports = {
       },
     );
   }),
+  changePhoto: (id, photo) => new Promise((resolve, reject) => {
+    db.query(
+      'UPDATE users SET photo=$1 WHERE id=$2',
+      [photo, id],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
 };
