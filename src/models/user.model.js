@@ -20,7 +20,7 @@ module.exports = {
     } else {
       base += ' users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills';
     }
-    let sql = `${base} FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR (
+    let sql = `${base} FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true AND users.is_deleted=false AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR (
         0 < (
           SELECT COUNT(*) 
           FROM unnest(workers.skills) AS skills
@@ -55,7 +55,7 @@ module.exports = {
     } else {
       base += ' users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, recruiters.position, recruiters.company_name';
     }
-    let sql = `${base} FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.is_verified=true AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.position) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.company_name) LIKE '%'||LOWER($1)||'%' OR LOWER(users.address) LIKE '%'||LOWER($1)||'%'`;
+    let sql = `${base} FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.is_verified=true AND users.is_deleted=false AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.position) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.company_name) LIKE '%'||LOWER($1)||'%' OR LOWER(users.address) LIKE '%'||LOWER($1)||'%'`;
 
     // jika query tidak ditujukan untuk mendapatkan count
     if (!count) {
@@ -79,7 +79,7 @@ module.exports = {
   }),
   selectDetailWorker: (id) => new Promise((resolve, reject) => {
     db.query(
-      'SELECT users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, users.created_at, workers.company_name, workers.job_desk, workers.skills FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.id=$1',
+      'SELECT users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, users.created_at, workers.company_name, workers.job_desk, workers.skills FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.id=$1 AND users.is_deleted=false',
       [id],
       (error, result) => {
         if (error) {
@@ -91,7 +91,7 @@ module.exports = {
   }),
   selectDetailRecruiter: (id) => new Promise((resolve, reject) => {
     db.query(
-      'SELECT users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, users.created_at, recruiters.company_name, recruiters.position FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.id=$1',
+      'SELECT users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, users.created_at, recruiters.company_name, recruiters.position FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.id=$1 AND users.is_deleted=false',
       [id],
       (error, result) => {
         if (error) {

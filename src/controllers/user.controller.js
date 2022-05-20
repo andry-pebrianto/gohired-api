@@ -1,5 +1,7 @@
 const userModel = require('../models/user.model');
 const createPagination = require('../utils/createPagination');
+const uploadGoogleDrive = require('../utils/uploadGoogleDrive');
+const deleteGoogleDrive = require('../utils/deleteGoogleDrive');
 const deleteFile = require('../utils/deleteFile');
 const { success, failed } = require('../utils/createResponse');
 
@@ -120,21 +122,51 @@ module.exports = {
       // jika ada upload photo
       if (req.files) {
         if (req.files.photo) {
-          // hapus file photo jika sebelumnya sudah pernah upload
+          // menghapus photo sebelumnya di gd jika sebelumnya sudah pernah upload
           if (user.rows[0].photo) {
-            deleteFile(`public/photo/${user.rows[0].photo}`);
+            await deleteGoogleDrive(user.rows[0].photo);
           }
-          // mengubah photo dengan nama dari upload
-          photo = req.files.photo[0].filename;
+          // upload photo baru ke gd
+          photo = await uploadGoogleDrive(req.files.photo[0]);
+          // menghapus photo setelah diupload ke gd
+          deleteFile(req.files.photo[0].path);
         }
       }
 
-      await userModel.changePhoto(user.rows[0].id, photo);
+      await userModel.changePhoto(user.rows[0].id, photo.id);
 
       success(res, {
         code: 200,
         payload: null,
         message: 'Update User Photo Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  updateProfile: async (req, res) => {
+    try {
+      const { slug } = req.params;
+
+      const user = await userModel.findBy('slug', slug);
+      // jika user tidak ditemukan
+      if (!user.rowCount) {
+        failed(res, {
+          code: 404,
+          payload: `User with Slug ${slug} not found`,
+          message: 'Update User Profile Failed',
+        });
+        return;
+      }
+
+      success(res, {
+        code: 200,
+        payload: null,
+        message: 'Update User Profile Success',
       });
     } catch (error) {
       failed(res, {

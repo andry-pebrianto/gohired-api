@@ -1,0 +1,31 @@
+{
+  "name": "Andry Pebrianto",
+  "jobDesk": "Web Developer",
+  "address": "Trenggalek, Jawa Timur",
+  "companyName": "PT Ankasa",
+  "description": "Manusia Api",
+  "skills": ["HTML", "PHP", "CSS"],
+  "experience": [
+    {
+      "position": "Web Developer",
+      "companyName":"PT Ankasa",
+      "startDate": "11-12-2020",
+      "endDate": "11-12-2021",
+      "description": "Bekerja dengan giat"
+    },
+    {
+      "position": "Mobile Developer",
+      "companyName":"PT Bambang",
+      "startDate": "11-12-2018",
+      "endDate": "11-12-2019",
+      "description": "Bekerja dengan tidak giat"
+    }
+  ],
+  "project": [
+    {
+      "title": "Social Media",
+      "appType": "Mobile",
+      "repo": "https://github.com/aswassaw"
+    }
+  ]
+}
