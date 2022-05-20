@@ -20,11 +20,9 @@ const deleteGoogleDrive = async (id) => {
       fileId: id,
     });
 
-    // console.log(response);
     return response;
   } catch (error) {
     console.log(error);
-    process.exit(1);
   }
 };
 
