@@ -78,10 +78,10 @@ module.exports = {
 
       let userDetail = null;
       // menentukan yang akan diambil data worker atau recruiter
-      if (user.rows[0].level === 1) {
-        userDetail = await userModel.selectDetailRecruiter(user.rows[0].id);
-      } else {
+      if (user.rows[0].level === 2) {
         userDetail = await userModel.selectDetailWorker(user.rows[0].id);
+      } else {
+        userDetail = await userModel.selectDetailRecruiter(user.rows[0].id);
       }
 
       success(res, {
@@ -164,6 +164,7 @@ module.exports = {
         return;
       }
 
+      // update user data
       const {
         name, address, description, phone, instagram, github, linkedin,
       } = req.body;
@@ -183,6 +184,12 @@ module.exports = {
         linkedin,
         updatedAt: new Date(),
       });
+
+      // update worker data
+
+      // update project data
+
+      // update experience data
 
       success(res, {
         code: 200,
