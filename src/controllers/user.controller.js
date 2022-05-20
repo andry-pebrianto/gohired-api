@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const userModel = require('../models/user.model');
+const workerModel = require('../models/worker.model');
 const createPagination = require('../utils/createPagination');
 const uploadGoogleDrive = require('../utils/uploadGoogleDrive');
 const deleteGoogleDrive = require('../utils/deleteGoogleDrive');
@@ -186,6 +187,12 @@ module.exports = {
       });
 
       // update worker data
+      const {
+        jobDesk, jobType, skills,
+      } = req.body;
+      await workerModel.updateWorkerData(user.rows[0].id, {
+        jobDesk, jobType, skills,
+      });
 
       // update project data
 

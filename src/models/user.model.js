@@ -122,7 +122,8 @@ module.exports = {
       phone,
       instagram,
       github,
-      linkedin, updatedAt,
+      linkedin,
+      updatedAt,
     } = data;
 
     db.query(
