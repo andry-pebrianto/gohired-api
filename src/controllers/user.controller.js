@@ -44,4 +44,43 @@ module.exports = {
       });
     }
   },
+  detail: async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const user = await userModel.findBy('slug', slug);
+
+      // jika user tidak ditemukan
+      if (!user.rowCount) {
+        failed(res, {
+          code: 404,
+          payload: `User with Id ${slug} not found`,
+          message: 'Select Detail User Failed',
+        });
+        return;
+      }
+
+      let userDetail = null;
+      // menentukan yang akan diambil data worker atau recruiter
+      if (user.rows[0].level === 1) {
+        userDetail = await userModel.selectDetailRecruiter(user.rows[0].id);
+      } else {
+        userDetail = await userModel.selectDetailWorker(user.rows[0].id);
+      }
+
+      success(res, {
+        code: 200,
+        payload: userDetail.rows[0],
+        message: 'Select Detail User Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  update: async (req, res) => {
+    res.json('Y');
+  },
 };
