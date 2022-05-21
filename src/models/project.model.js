@@ -1,0 +1,32 @@
+const db = require('../config/db');
+
+module.exports = {
+  deleteAllProjectUserHave: (id) => new Promise((resolve, reject) => {
+    db.query(
+      'DELETE FROM projects WHERE user_id=$1',
+      [id],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
+  addProject: (data) => new Promise((resolve, reject) => {
+    const {
+      id, title, photo, appType, repo, userId, createdAt,
+    } = data;
+
+    db.query(
+      'INSERT INTO projects (id, title, photo, app_type, repo, user_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [id, title, photo, appType, repo, userId, createdAt],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
+};

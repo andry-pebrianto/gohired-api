@@ -1,6 +1,9 @@
 const crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 const userModel = require('../models/user.model');
 const workerModel = require('../models/worker.model');
+const projectModel = require('../models/project.model');
+const experienceModel = require('../models/experience.model');
 const createPagination = require('../utils/createPagination');
 const uploadGoogleDrive = require('../utils/uploadGoogleDrive');
 const deleteGoogleDrive = require('../utils/deleteGoogleDrive');
@@ -194,9 +197,35 @@ module.exports = {
         jobDesk, jobType, skills,
       });
 
-      // update project data
+      // add / update project data
+      const { projects } = req.body;
+      if (projects) {
+        await projectModel.deleteAllProjectUserHave(user.rows[0].id);
 
-      // update experience data
+        projects.map(async (project) => {
+          await projectModel.addProject({
+            id: uuidv4(),
+            ...project,
+            createdAt: new Date(),
+            userId: user.rows[0].id,
+          });
+        });
+      }
+
+      // add / update experience data
+      const { experiences } = req.body;
+      if (experiences) {
+        await experienceModel.deleteAllExperienceUserHave(user.rows[0].id);
+
+        experiences.map(async (project) => {
+          await experienceModel.addExperience({
+            id: uuidv4(),
+            ...project,
+            createdAt: new Date(),
+            userId: user.rows[0].id,
+          });
+        });
+      }
 
       success(res, {
         code: 200,
