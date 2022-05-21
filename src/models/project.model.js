@@ -1,6 +1,18 @@
 const db = require('../config/db');
 
 module.exports = {
+  findBy: (field, search) => new Promise((resolve, reject) => {
+    db.query(
+      `SELECT * FROM projects WHERE ${field}=$1`,
+      [search],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
   deleteAllProjectUserHave: (id) => new Promise((resolve, reject) => {
     db.query(
       'DELETE FROM projects WHERE user_id=$1',

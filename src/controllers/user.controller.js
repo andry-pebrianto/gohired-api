@@ -83,14 +83,22 @@ module.exports = {
       let userDetail = null;
       // menentukan yang akan diambil data worker atau recruiter
       if (user.rows[0].level === 2) {
-        userDetail = await userModel.selectDetailWorker(user.rows[0].id);
+        const userData = await userModel.selectDetailWorker(user.rows[0].id);
+        const projectsData = await projectModel.findBy('user_id', user.rows[0].id);
+        const experiencesData = await experienceModel.findBy('user_id', user.rows[0].id);
+
+        userDetail = {
+          ...userData.rows[0],
+          projects: projectsData.rows,
+          experiences: experiencesData.rows,
+        };
       } else {
         userDetail = await userModel.selectDetailRecruiter(user.rows[0].id);
       }
 
       success(res, {
         code: 200,
-        payload: userDetail.rows[0],
+        payload: userDetail,
         message: 'Select Detail User Success',
       });
     } catch (error) {
