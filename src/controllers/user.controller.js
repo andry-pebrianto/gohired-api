@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const userModel = require('../models/user.model');
 const workerModel = require('../models/worker.model');
@@ -183,7 +182,7 @@ module.exports = {
 
       await userModel.updateUserData(user.rows[0].id, {
         name,
-	slug: user.rows[0].slug,
+        slug: user.rows[0].slug,
         address,
         description,
         phone,

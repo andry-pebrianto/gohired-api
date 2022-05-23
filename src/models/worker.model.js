@@ -23,7 +23,7 @@ module.exports = {
     db.query(
       'UPDATE workers SET job_type=$1, job_desk=$2, skills=$3 WHERE user_id=$4',
       [
-        jobDesk, jobType, skills, id,
+        jobType, jobDesk, skills, id,
       ],
       (error, result) => {
         if (error) {
