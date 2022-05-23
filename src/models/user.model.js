@@ -18,7 +18,7 @@ module.exports = {
     if (count) {
       base += ' COUNT(*)';
     } else {
-      base += ' users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills';
+      base += ' users.id, users.name, users.slug, users.email, users.photo, users.address, users.instagram, users.github, users.linkedin, users.phone, workers.job_desk, workers.skills';
     }
     let sql = `${base} FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true AND users.is_deleted=false AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR (
         0 < (
@@ -53,7 +53,7 @@ module.exports = {
     if (count) {
       base += ' COUNT(*)';
     } else {
-      base += ' users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, recruiters.position, recruiters.company_name';
+      base += ' users.id, users.name, users.slug, users.email, users.photo, users.address, users.instagram, users.github, users.linkedin, users.phone, recruiters.position, recruiters.company_name';
     }
     let sql = `${base} FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.is_verified=true AND users.is_deleted=false AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.position) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.company_name) LIKE '%'||LOWER($1)||'%' OR LOWER(users.address) LIKE '%'||LOWER($1)||'%'`;
 
