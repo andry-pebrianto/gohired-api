@@ -187,7 +187,6 @@ module.exports = {
         : user.rows[0].slug;
       await userModel.updateUserData(user.rows[0].id, {
         name,
-        slug: newSlug,
         address,
         description,
         phone,
