@@ -136,7 +136,7 @@ module.exports = {
             message: 'Login Success',
             token: {
               jwt,
-              id: user.rows[0].id,
+              slug: user.rows[0].slug,
             },
           });
           return;
