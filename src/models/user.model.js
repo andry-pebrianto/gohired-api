@@ -79,7 +79,7 @@ module.exports = {
   }),
   selectDetailWorker: (id) => new Promise((resolve, reject) => {
     db.query(
-      'SELECT users.id, users.name, users.slug, users.description, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, workers.company_name, workers.job_desk, workers.skills FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.id=$1 AND users.is_deleted=false',
+      'SELECT users.id, users.name, users.slug, users.description, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, workers.company_name, workers.job_desk, workers.job_type, workers.skills FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.id=$1 AND users.is_deleted=false',
       [id],
       (error, result) => {
         if (error) {
