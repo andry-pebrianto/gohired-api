@@ -180,13 +180,10 @@ module.exports = {
       const {
         name, address, description, phone, instagram, github, linkedin,
       } = req.body;
-      const newSlug = name !== user.rows[0].name
-        ? `${name.toLowerCase().trim().split(' ').join('-')}-${crypto
-          .randomBytes(3)
-          .toString('hex')}`
-        : user.rows[0].slug;
+
       await userModel.updateUserData(user.rows[0].id, {
         name,
+	slug: user.rows[0].slug,
         address,
         description,
         phone,
