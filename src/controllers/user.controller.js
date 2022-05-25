@@ -83,8 +83,14 @@ module.exports = {
       // menentukan yang akan diambil data worker atau recruiter
       if (user.rows[0].level === 2) {
         const userData = await userModel.selectDetailWorker(user.rows[0].id);
-        const projectsData = await projectModel.findBy('user_id', user.rows[0].id);
-        const experiencesData = await experienceModel.findBy('user_id', user.rows[0].id);
+        const projectsData = await projectModel.findBy(
+          'user_id',
+          user.rows[0].id,
+        );
+        const experiencesData = await experienceModel.findBy(
+          'user_id',
+          user.rows[0].id,
+        );
 
         userDetail = {
           ...userData.rows[0],
@@ -92,7 +98,10 @@ module.exports = {
           experiences: experiencesData.rows,
         };
       } else {
-        userDetail = await userModel.selectDetailRecruiter(user.rows[0].id);
+        const recruiterDetail = await userModel.selectDetailRecruiter(
+          user.rows[0].id,
+        );
+        userDetail = recruiterDetail.rows[0];
       }
 
       success(res, {
@@ -188,44 +197,52 @@ module.exports = {
         instagram,
         github,
         linkedin,
-        updatedAt: new Date(),
       });
 
-      // update worker data
-      const {
-        jobDesk, jobType, skills,
-      } = req.body;
-      await workerModel.updateWorkerData(user.rows[0].id, {
-        jobDesk, jobType, skills,
-      });
-
-      // add / update project data
-      const { projects } = req.body;
-      if (projects) {
-        await projectModel.deleteAllProjectUserHave(user.rows[0].id);
-
-        projects.map(async (project) => {
-          await projectModel.addProject({
-            id: uuidv4(),
-            ...project,
-            createdAt: new Date(),
-            userId: user.rows[0].id,
-          });
+      if (user.rows[0].level === 2) {
+        // update worker data
+        const { jobDesk, jobType, skills } = req.body;
+        await workerModel.updateWorkerData(user.rows[0].id, {
+          jobDesk,
+          jobType,
+          skills,
         });
-      }
 
-      // add / update experience data
-      const { experiences } = req.body;
-      if (experiences) {
-        await experienceModel.deleteAllExperienceUserHave(user.rows[0].id);
+        // add / update project data
+        const { projects } = req.body;
+        if (projects) {
+          await projectModel.deleteAllProjectUserHave(user.rows[0].id);
 
-        experiences.map(async (project) => {
-          await experienceModel.addExperience({
-            id: uuidv4(),
-            ...project,
-            createdAt: new Date(),
-            userId: user.rows[0].id,
+          projects.map(async (project) => {
+            await projectModel.addProject({
+              id: uuidv4(),
+              ...project,
+              createdAt: new Date(),
+              userId: user.rows[0].id,
+            });
           });
+        }
+
+        // add / update experience data
+        const { experiences } = req.body;
+        if (experiences) {
+          await experienceModel.deleteAllExperienceUserHave(user.rows[0].id);
+
+          experiences.map(async (project) => {
+            await experienceModel.addExperience({
+              id: uuidv4(),
+              ...project,
+              createdAt: new Date(),
+              userId: user.rows[0].id,
+            });
+          });
+        }
+      } else {
+        // update worker data
+        const { position, companyName } = req.body;
+        await workerModel.updateWorkerData(user.rows[0].id, {
+          position,
+          companyName,
         });
       }
 

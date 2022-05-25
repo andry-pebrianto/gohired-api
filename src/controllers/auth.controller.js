@@ -33,7 +33,6 @@ module.exports = {
         phone,
         companyName,
         position,
-        recruiter = false,
       } = req.body;
       const password = await bcrypt.hash(req.body.password, 10);
       const token = crypto.randomBytes(30).toString('hex');
@@ -44,12 +43,12 @@ module.exports = {
         email,
         phone,
         password,
-        level: recruiter ? 1 : 2,
+        level: companyName ? 1 : 2,
         createdAt: new Date(),
       });
 
       // jika register sebagai recruiter
-      if (recruiter) {
+      if (companyName) {
         // insert recruiter
         await recruiterModel.addRecruiter({
           id: uuidv4(),
