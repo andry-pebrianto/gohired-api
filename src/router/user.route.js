@@ -1,5 +1,6 @@
 const express = require('express');
 const validation = require('../validations/user.validation');
+const { myself } = require('../middlewares/authorization');
 const socialValidation = require('../validations/social.validation');
 const runValidation = require('../middlewares/runValidation');
 const jwtAuth = require('../middlewares/jwtAuth');
@@ -15,7 +16,7 @@ router
   .get('/user/worker', jwtAuth, list)
   .get('/user/recruiter', jwtAuth, list)
   .get('/user/:id', jwtAuth, detail)
-  .put('/user/:id/profile', jwtAuth, validation.updateProfile, runValidation, socialValidation, updateProfile)
-  .put('/user/:id/photo', jwtAuth, upload, photoLimit, updatePhoto);
+  .put('/user/:id/profile', jwtAuth, myself, validation.updateProfile, runValidation, socialValidation, updateProfile)
+  .put('/user/:id/photo', jwtAuth, myself, upload, photoLimit, updatePhoto);
 
 module.exports = router;

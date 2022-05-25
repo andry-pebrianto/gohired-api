@@ -25,4 +25,26 @@ module.exports = {
       });
     }
   },
+  myself: async (req, res, next) => {
+    try {
+      const idUser = req.APP_DATA.tokenDecoded.id;
+      const idUpdate = req.params.id;
+
+      if (idUser === idUpdate) {
+        next();
+      } else {
+        failed(res, {
+          code: 401,
+          payload: 'You do not have access',
+          message: 'Unauthorized',
+        });
+      }
+    } catch (error) {
+      failed(res, {
+        code: 401,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
 };
