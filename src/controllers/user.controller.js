@@ -66,14 +66,14 @@ module.exports = {
   },
   detail: async (req, res) => {
     try {
-      const { slug } = req.params;
-      const user = await userModel.findBy('slug', slug);
+      const { id } = req.params;
+      const user = await userModel.findBy('id', id);
 
       // jika user tidak ditemukan
       if (!user.rowCount) {
         failed(res, {
           code: 404,
-          payload: `User with Slug ${slug} not found`,
+          payload: `User with Id ${id} not found`,
           message: 'Select Detail User Failed',
         });
         return;
@@ -110,9 +110,9 @@ module.exports = {
   },
   updatePhoto: async (req, res) => {
     try {
-      const { slug } = req.params;
+      const { id } = req.params;
 
-      const user = await userModel.findBy('slug', slug);
+      const user = await userModel.findBy('id', id);
       // jika user tidak ditemukan
       if (!user.rowCount) {
         // hapus jika ada upload photo
@@ -124,7 +124,7 @@ module.exports = {
 
         failed(res, {
           code: 404,
-          payload: `User with Slug ${slug} not found`,
+          payload: `User with Id ${id} not found`,
           message: 'Update User Photo Failed',
         });
         return;
@@ -162,14 +162,14 @@ module.exports = {
   },
   updateProfile: async (req, res) => {
     try {
-      const { slug } = req.params;
+      const { id } = req.params;
 
-      const user = await userModel.findBy('slug', slug);
+      const user = await userModel.findBy('id', id);
       // jika user tidak ditemukan
       if (!user.rowCount) {
         failed(res, {
           code: 404,
-          payload: `User with Slug ${slug} not found`,
+          payload: `User with Id ${id} not found`,
           message: 'Update User Profile Failed',
         });
         return;
@@ -182,7 +182,6 @@ module.exports = {
 
       await userModel.updateUserData(user.rows[0].id, {
         name,
-        slug: user.rows[0].slug,
         address,
         description,
         phone,

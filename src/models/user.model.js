@@ -18,7 +18,7 @@ module.exports = {
     if (count) {
       base += ' COUNT(*)';
     } else {
-      base += ' users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills';
+      base += ' users.id, users.name, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills';
     }
     let sql = `${base} FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true AND users.is_deleted=false AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR (
         0 < (
@@ -53,7 +53,7 @@ module.exports = {
     if (count) {
       base += ' COUNT(*)';
     } else {
-      base += ' users.id, users.name, users.slug, users.email, users.photo, users.address, users.phone, recruiters.position, recruiters.company_name';
+      base += ' users.id, users.name, users.email, users.photo, users.address, users.phone, recruiters.position, recruiters.company_name';
     }
     let sql = `${base} FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.is_verified=true AND users.is_deleted=false AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.position) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.company_name) LIKE '%'||LOWER($1)||'%' OR LOWER(users.address) LIKE '%'||LOWER($1)||'%'`;
 
@@ -79,7 +79,7 @@ module.exports = {
   }),
   selectDetailWorker: (id) => new Promise((resolve, reject) => {
     db.query(
-      'SELECT users.id, users.name, users.slug, users.description, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, workers.company_name, workers.job_desk, workers.job_type, workers.skills FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.id=$1 AND users.is_deleted=false',
+      'SELECT users.id, users.name, users.description, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, workers.company_name, workers.job_desk, workers.job_type, workers.skills FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.id=$1 AND users.is_deleted=false',
       [id],
       (error, result) => {
         if (error) {
@@ -91,7 +91,7 @@ module.exports = {
   }),
   selectDetailRecruiter: (id) => new Promise((resolve, reject) => {
     db.query(
-      'SELECT users.id, users.name, users.slug, users.description, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, recruiters.company_name, recruiters.position FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.id=$1 AND users.is_deleted=false',
+      'SELECT users.id, users.name, users.description, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, recruiters.company_name, recruiters.position FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.id=$1 AND users.is_deleted=false',
       [id],
       (error, result) => {
         if (error) {
@@ -116,7 +116,6 @@ module.exports = {
   updateUserData: (id, data) => new Promise((resolve, reject) => {
     const {
       name,
-      slug,
       address,
       description,
       phone,
@@ -127,10 +126,9 @@ module.exports = {
     } = data;
 
     db.query(
-      'UPDATE users SET name=$1, slug=$2, address=$3, description=$4, phone=$5, instagram=$6, github=$7, linkedin=$8, updated_at=$9 WHERE id=$10',
+      'UPDATE users SET name=$1 address=$2, description=$3, phone=$4, instagram=$5, github=$6, linkedin=$7, updated_at=$8 WHERE id=$9',
       [
         name,
-        slug,
         address,
         description,
         phone,

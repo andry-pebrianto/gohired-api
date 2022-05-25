@@ -28,7 +28,12 @@ module.exports = {
       }
 
       const {
-        name, email, phone, companyName, position,
+        name,
+        email,
+        phone,
+        companyName,
+        position,
+        recruiter = false,
       } = req.body;
       const password = await bcrypt.hash(req.body.password, 10);
       const token = crypto.randomBytes(30).toString('hex');
@@ -36,19 +41,15 @@ module.exports = {
       const insertData = await authModel.register({
         id: uuidv4(),
         name,
-        slug: `${name.toLowerCase().trim().split(' ').join('-')}-${crypto
-          .randomBytes(3)
-          .toString('hex')}`,
         email,
         phone,
         password,
-        level: companyName ? 1 : 2,
-        companyName,
-        position,
+        level: recruiter ? 1 : 2,
         createdAt: new Date(),
-        updatedAt: new Date(),
       });
-      if (companyName) {
+
+      // jika register sebagai recruiter
+      if (recruiter) {
         // insert recruiter
         await recruiterModel.addRecruiter({
           id: uuidv4(),
@@ -119,7 +120,7 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-      const user = await authModel.login(email);
+      const user = await userModel.findBy('email', email);
 
       // jika user ditemukan
       if (user.rowCount > 0) {
@@ -136,7 +137,8 @@ module.exports = {
             message: 'Login Success',
             token: {
               jwt,
-              slug: user.rows[0].slug,
+              id: user.rows[0].id,
+              level: user.rows[0].level,
             },
           });
           return;

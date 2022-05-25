@@ -14,8 +14,8 @@ const router = express.Router();
 router
   .get('/user/worker', jwtAuth, list)
   .get('/user/recruiter', jwtAuth, list)
-  .get('/user/:slug', jwtAuth, detail)
-  .put('/user/:slug/profile', jwtAuth, validation.updateProfile, runValidation, socialValidation, updateProfile)
-  .put('/user/:slug/photo', jwtAuth, upload, photoLimit, updatePhoto);
+  .get('/user/:id', jwtAuth, detail)
+  .put('/user/:id/profile', jwtAuth, validation.updateProfile, runValidation, socialValidation, updateProfile)
+  .put('/user/:id/photo', jwtAuth, upload, photoLimit, updatePhoto);
 
 module.exports = router;

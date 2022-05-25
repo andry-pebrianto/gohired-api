@@ -5,8 +5,8 @@ const htmlTemplateTop = `
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="Aplikasi Sharing Resep Makanan">
-  <meta name="keywords" content="Koleksi Resep, Javascript, NodeJS, ExpressJS">
+  <meta name="description" content="Aplikasi Pencari Kerja">
+  <meta name="keywords" content="GoHired, Javascript, NodeJS, ExpressJS">
   <meta name="author" content="Andry Pebrianto">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -52,9 +52,9 @@ const htmlTemplateTop = `
   <title>Verify Your Account!</title>
 </head>
 
-<body style="background-color: #17a2b8; padding: 20px;">
+<body style="background-color: #5E50A1; padding: 20px;">
   <h1 class="auth-title">
-    Koleksi Resep
+    GoHired
   </h1>
 
   <div class="auth-content" style="background-color: white;">
