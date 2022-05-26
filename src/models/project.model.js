@@ -41,4 +41,16 @@ module.exports = {
       },
     );
   }),
+  removeById: (id) => new Promise((resolve, reject) => {
+    db.query(
+      'DELETE FROM projects WHERE id=$1',
+      [id],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
 };
