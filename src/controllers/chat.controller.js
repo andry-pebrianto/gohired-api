@@ -41,4 +41,34 @@ module.exports = {
       });
     }
   },
+  removeChat: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const chat = await chatModel.findBy('id', id);
+
+      // jika chat tidak ditemukan
+      if (!chat.rowCount) {
+        failed(res, {
+          code: 404,
+          payload: `Chat with Id ${id} not found`,
+          message: 'Remove Chat Failed',
+        });
+        return;
+      }
+
+      await chatModel.removeById(id);
+
+      success(res, {
+        code: 200,
+        payload: null,
+        message: 'Remove Chat Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
 };

@@ -1,6 +1,7 @@
 const userModel = require('../models/user.model');
 const experienceModel = require('../models/experience.model');
 const projectModel = require('../models/project.model');
+const chatModel = require('../models/chat.model');
 const { failed } = require('../utils/createResponse');
 
 module.exports = {
@@ -90,6 +91,35 @@ module.exports = {
       } else {
         // jika id pembuat project sama dengan id dari jwt
         if (idUser === project.rows[0].user_id) {
+          next();
+        } else {
+          failed(res, {
+            code: 401,
+            payload: 'You do not have access',
+            message: 'Unauthorized',
+          });
+        }
+      }
+    } catch (error) {
+      failed(res, {
+        code: 401,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  chatOwner: async (req, res, next) => {
+    try {
+      const idUser = req.APP_DATA.tokenDecoded.id;
+      const idChat = req.params.id;
+      const chat = await chatModel.findBy('id', idChat);
+
+      // jika chat tidak ditemukan
+      if (!chat.rowCount) {
+        next();
+      } else {
+        // jika id pembuat chat sama dengan id dari jwt
+        if (idUser === chat.rows[0].sender_id) {
           next();
         } else {
           failed(res, {
