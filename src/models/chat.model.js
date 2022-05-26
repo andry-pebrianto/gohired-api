@@ -73,4 +73,16 @@ module.exports = {
       },
     );
   }),
+  selectListChat: (senderId, receiverId) => new Promise((resolve, reject) => {
+    db.query(
+      'SELECT * FROM chats WHERE sender_id=$1 AND receiver_id=$2 OR sender_id=$2 AND receiver_id=$1',
+      [senderId, receiverId],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
 };

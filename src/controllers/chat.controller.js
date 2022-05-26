@@ -25,7 +25,7 @@ module.exports = {
         id: uuidv4(),
         senderId: req.APP_DATA.tokenDecoded.id,
         receiverId,
-        chatMessage,
+        chatMessage: chatMessage.trim(),
         createdAt: new Date(),
       });
 
@@ -84,6 +84,24 @@ module.exports = {
         code: 200,
         payload: data.rows,
         message: 'Select Chat Menu Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  listChat: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const listChat = await chatModel.selectListChat(req.APP_DATA.tokenDecoded.id, id);
+
+      success(res, {
+        code: 200,
+        payload: listChat.rows,
+        message: 'Select List Chat Success',
       });
     } catch (error) {
       failed(res, {
