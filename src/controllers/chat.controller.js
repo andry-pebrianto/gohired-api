@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { v4: uuidv4 } = require('uuid');
 const userModel = require('../models/user.model');
 const chatModel = require('../models/chat.model');
@@ -29,7 +30,7 @@ module.exports = {
       });
 
       success(res, {
-        code: 200,
+        code: 201,
         payload: null,
         message: 'Send Chat Success',
       });
@@ -62,6 +63,27 @@ module.exports = {
         code: 200,
         payload: null,
         message: 'Remove Chat Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  listMenuChat: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const allIdMenu = await chatModel.selectIdMenu(id);
+      const idMenuFiltered = _.uniqBy(allIdMenu.rows.filter((menu) => menu.sender_id !== req.APP_DATA.tokenDecoded.id).map((menu) => menu.sender_id));
+      const data = await chatModel.selectMenu(idMenuFiltered);
+
+      success(res, {
+        code: 200,
+        payload: data.rows,
+        message: 'Select Chat Menu Success',
       });
     } catch (error) {
       failed(res, {

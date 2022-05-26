@@ -41,4 +41,36 @@ module.exports = {
       },
     );
   }),
+  selectIdMenu: (id) => new Promise((resolve, reject) => {
+    db.query(
+      'SELECT sender_id FROM chats WHERE sender_id=$1 OR receiver_id=$1',
+      [id],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
+  selectMenu: (arrSearch) => new Promise((resolve, reject) => {
+    let sql = 'SELECT id, name, photo, phone FROM users WHERE id=$1';
+
+    arrSearch.forEach((search, index) => {
+      if (index + 1 !== 1) {
+        sql += ` OR id=$${index + 1}`;
+      }
+    });
+
+    db.query(
+      sql,
+      arrSearch,
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
 };
