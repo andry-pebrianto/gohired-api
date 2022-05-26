@@ -27,6 +27,7 @@ app.use(require('./src/router/auth.route'));
 app.use(require('./src/router/user.route'));
 app.use(require('./src/router/experience.route'));
 app.use(require('./src/router/project.route'));
+app.use(require('./src/router/chat.route'));
 // 404 router
 app.use((req, res) => {
   failed(res, {
