@@ -5,7 +5,7 @@ const activateAccount = (link) => {
   <p>
     Anda menerima email ini karena Anda telah melakukan permintaan Reset Password di GoHired.
     <br>
-    Segera ubah sandi Anda dengan click tombol di bawah ini.
+    Segera ubah password Anda dengan click tombol di bawah ini.
   </p>
   
   <a href="${link}" style="color: white;" class="auth-button">Reset Password</a>
