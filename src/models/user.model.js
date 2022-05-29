@@ -79,7 +79,7 @@ module.exports = {
   }),
   selectDetailWorker: (id) => new Promise((resolve, reject) => {
     db.query(
-      'SELECT users.id, users.name, users.description, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, workers.company_name, workers.job_desk, workers.job_type, workers.skills FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.id=$1',
+      'SELECT users.id, users.name, users.description, users.level, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, workers.company_name, workers.job_desk, workers.job_type, workers.skills FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.id=$1',
       [id],
       (error, result) => {
         if (error) {
@@ -91,7 +91,7 @@ module.exports = {
   }),
   selectDetailRecruiter: (id) => new Promise((resolve, reject) => {
     db.query(
-      'SELECT users.id, users.name, users.description, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, recruiters.company_name, recruiters.position FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.id=$1',
+      'SELECT users.id, users.name, users.description, users.level, users.email, users.photo, users.instagram, users.github, users.linkedin, users.address, users.phone, users.created_at, recruiters.company_name, recruiters.position FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.id=$1',
       [id],
       (error, result) => {
         if (error) {
