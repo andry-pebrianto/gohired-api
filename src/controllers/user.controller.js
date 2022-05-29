@@ -18,7 +18,7 @@ module.exports = {
 
       // jika data yang ingin diambil adalah recruiter
       if (
-        req.originalUrl.split('/')[req.originalUrl.split('/').length - 1]
+        req.originalUrl.split('/')[req.originalUrl.split('/').length - 1].slice(0, 9)
         === 'recruiter'
       ) {
         const count = await userModel.selectAllRecruiter(true, search, orderBy);
