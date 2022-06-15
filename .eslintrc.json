@@ -19,6 +19,8 @@
         "consistent-return": 0,
         "prefer-destructuring": 0,
         "max-len": 0,
-        "camelcase": 0
+        "camelcase": 0,
+        "no-await-in-loop": 0,
+        "no-plusplus": 0
     }
 }

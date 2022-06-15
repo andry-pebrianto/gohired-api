@@ -1,88 +1,45 @@
+const { v4: uuidv4 } = require('uuid');
 const db = require('../config/db');
 
 module.exports = {
-  findBy: (field, search) => new Promise((resolve, reject) => {
-    db.query(
-      `SELECT * FROM chats WHERE ${field}=$1`,
-      [search],
-      (error, result) => {
-        if (error) {
-          reject(error);
+  insertChat: (senderId, receiverId, message) => {
+    const id = uuidv4();
+    return new Promise((resolve, reject) => {
+      db.query('INSERT INTO chat (id, sender, receiver, message) VALUES ($1, $2, $3, $4)', [id, senderId, receiverId, message], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
         }
+      });
+    });
+  },
+  deleteChat: (id, senderId) => new Promise((resolve, reject) => {
+    db.query('DELETE FROM chat WHERE id=$1 AND sender=$2', [id, senderId], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
         resolve(result);
-      },
-    );
-  }),
-  send: (data) => new Promise((resolve, reject) => {
-    const {
-      id, senderId, receiverId, chatMessage, createdAt,
-    } = data;
-
-    db.query(
-      'INSERT INTO chats (id, sender_id, receiver_id, chat_message, created_at) VALUES ($1, $2, $3, $4, $5)',
-      [id, senderId, receiverId, chatMessage, createdAt],
-      (error, result) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(result);
-      },
-    );
-  }),
-  removeById: (id) => new Promise((resolve, reject) => {
-    db.query(
-      'DELETE FROM chats WHERE id=$1',
-      [id],
-      (error, result) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(result);
-      },
-    );
-  }),
-  selectIdMenu: (id) => new Promise((resolve, reject) => {
-    db.query(
-      'SELECT sender_id FROM chats WHERE sender_id=$1 OR receiver_id=$1',
-      [id],
-      (error, result) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(result);
-      },
-    );
-  }),
-  selectMenu: (arrSearch) => new Promise((resolve, reject) => {
-    let sql = 'SELECT id, name, photo, phone FROM users WHERE id=$1';
-
-    arrSearch.forEach((search, index) => {
-      if (index + 1 !== 1) {
-        sql += ` OR id=$${index + 1}`;
       }
     });
-
-    db.query(
-      sql,
-      arrSearch,
-      (error, result) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(result);
-      },
-    );
   }),
-  selectListChat: (senderId, receiverId) => new Promise((resolve, reject) => {
-    db.query(
-      'SELECT * FROM chats WHERE sender_id=$1 AND receiver_id=$2 OR sender_id=$2 AND receiver_id=$1',
-      [senderId, receiverId],
-      (error, result) => {
-        if (error) {
-          reject(error);
-        }
+  listChat: (senderId, receiverId) => new Promise((resolve, reject) => {
+    db.query(`SELECT 
+      chat.id, 
+      chat.message, 
+      chat.date, 
+      userSender.id AS sender_id, 
+      userReceiver.id AS receiver_id 
+      FROM chat
+      INNER JOIN users AS userSender ON chat.sender=userSender.id
+      INNER JOIN users AS userReceiver ON chat.receiver=userReceiver.id
+      WHERE (sender = '${senderId}' AND receiver = '${receiverId}') 
+      OR (sender = '${receiverId}' AND receiver = '${senderId}')`, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
         resolve(result);
-      },
-    );
+      }
+    });
   }),
 };

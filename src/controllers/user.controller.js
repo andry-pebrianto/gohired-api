@@ -259,4 +259,64 @@ module.exports = {
       });
     }
   },
+  getListChatRecruiter: async (req, res) => {
+    try {
+      const workers = await userModel.findBy('level', 2);
+
+      for (let i = 0; i < workers.rows.length; i++) {
+        const checkAlreadyChat = await userModel.listChat(
+          req.APP_DATA.tokenDecoded.id,
+          workers.rows[i].id,
+        );
+
+        if (checkAlreadyChat.rowCount) {
+          workers.rows[i].already_chat = true;
+        } else {
+          workers.rows[i].already_chat = false;
+        }
+      }
+
+      success(res, {
+        code: 200,
+        payload: workers.rows,
+        message: 'Select List Chat Recruiter Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  getListChatWorker: async (req, res) => {
+    try {
+      const recruiters = await userModel.findBy('level', 2);
+
+      for (let i = 0; i < recruiters.rows.length; i++) {
+        const checkAlreadyChat = await userModel.listChat(
+          req.APP_DATA.tokenDecoded.id,
+          recruiters.rows[i].id,
+        );
+
+        if (checkAlreadyChat.rowCount) {
+          recruiters.rows[i].already_chat = true;
+        } else {
+          recruiters.rows[i].already_chat = false;
+        }
+      }
+
+      success(res, {
+        code: 200,
+        payload: recruiters.rows,
+        message: 'Select List Chat Worker Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
 };
