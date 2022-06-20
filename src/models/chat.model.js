@@ -1,21 +1,37 @@
-const { v4: uuidv4 } = require('uuid');
 const db = require('../config/db');
 
 module.exports = {
-  insertChat: (senderId, receiverId, message) => {
-    const id = uuidv4();
-    return new Promise((resolve, reject) => {
-      db.query('INSERT INTO chat (id, sender, receiver, message) VALUES ($1, $2, $3, $4)', [id, senderId, receiverId, message], (err, result) => {
+  list: (sender, receiver) => new Promise((resolve, reject) => {
+    db.query(
+      `SELECT userSender.photo AS photo, chats.created_at, chats.id, chats.chat, chats.is_deleted, userSender.id AS sender_id, userReceiver.id AS receiver_id FROM chats LEFT JOIN users AS userSender ON chats.sender=userSender.id LEFT JOIN users AS userReceiver ON chats.receiver=userReceiver.id WHERE (sender='${sender}' AND receiver='${receiver}') OR (sender='${receiver}' AND receiver='${sender}') ORDER BY chats.created_at`,
+      (err, res) => {
         if (err) {
           reject(err);
-        } else {
-          resolve(result);
         }
-      });
+        resolve(res);
+      },
+    );
+  }),
+  store: (data) => {
+    const {
+      id, sender, receiver, chat, createdAt,
+    } = data;
+
+    return new Promise((resolve, reject) => {
+      db.query(
+        'INSERT INTO chats (id, sender, receiver, chat, created_at) VALUES ($1, $2, $3, $4, $5)',
+        [id, sender, receiver, chat, createdAt],
+        (err, res) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(res);
+        },
+      );
     });
   },
-  deleteChat: (id, senderId) => new Promise((resolve, reject) => {
-    db.query('DELETE FROM chat WHERE id=$1 AND sender=$2', [id, senderId], (err, result) => {
+  updateChat: (id, newMessage) => new Promise((resolve, reject) => {
+    db.query('UPDATE chats SET chat=$1 WHERE id=$2', [newMessage, id], (err, result) => {
       if (err) {
         reject(err);
       } else {
@@ -23,18 +39,8 @@ module.exports = {
       }
     });
   }),
-  listChat: (senderId, receiverId) => new Promise((resolve, reject) => {
-    db.query(`SELECT 
-      chat.id, 
-      chat.message, 
-      chat.date, 
-      userSender.id AS sender_id, 
-      userReceiver.id AS receiver_id 
-      FROM chat
-      INNER JOIN users AS userSender ON chat.sender=userSender.id
-      INNER JOIN users AS userReceiver ON chat.receiver=userReceiver.id
-      WHERE (sender = '${senderId}' AND receiver = '${receiverId}') 
-      OR (sender = '${receiverId}' AND receiver = '${senderId}')`, (err, result) => {
+  deleteChat: (id) => new Promise((resolve, reject) => {
+    db.query('UPDATE chats SET is_deleted=true WHERE id=$1', [id], (err, result) => {
       if (err) {
         reject(err);
       } else {
