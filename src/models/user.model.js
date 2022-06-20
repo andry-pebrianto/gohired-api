@@ -18,7 +18,8 @@ module.exports = {
     if (count) {
       base += ' COUNT(*)';
     } else {
-      base += ' users.id, users.name, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills';
+      base
+          += ' users.id, users.name, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills';
     }
     let sql = `${base} FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR (
         0 < (
@@ -53,7 +54,8 @@ module.exports = {
     if (count) {
       base += ' COUNT(*)';
     } else {
-      base += ' users.id, users.name, users.email, users.photo, users.address, users.phone, recruiters.position, recruiters.company_name';
+      base
+          += ' users.id, users.name, users.email, users.photo, users.address, users.phone, recruiters.position, recruiters.company_name';
     }
     let sql = `${base} FROM users INNER JOIN recruiters ON users.id = recruiters.user_id WHERE users.is_verified=true AND LOWER(users.name) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.position) LIKE '%'||LOWER($1)||'%' OR LOWER(recruiters.company_name) LIKE '%'||LOWER($1)||'%' OR LOWER(users.address) LIKE '%'||LOWER($1)||'%'`;
 
@@ -115,27 +117,23 @@ module.exports = {
   }),
   updateUserData: (id, data) => new Promise((resolve, reject) => {
     const {
-      name,
-      address,
-      description,
-      phone,
-      instagram,
-      github,
-      linkedin,
+      name, address, description, phone, instagram, github, linkedin,
     } = data;
 
     db.query(
       'UPDATE users SET name=$1, address=$2, description=$3, phone=$4, instagram=$5, github=$6, linkedin=$7 WHERE id=$8',
-      [
-        name,
-        address,
-        description,
-        phone,
-        instagram,
-        github,
-        linkedin,
-        id,
-      ],
+      [name, address, description, phone, instagram, github, linkedin, id],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
+  selectListNewWorker: () => new Promise((resolve, reject) => {
+    db.query(
+      'SELECT users.id, users.name, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills, users.created_at FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true ORDER BY users.created_at DESC LIMIT 10',
       (error, result) => {
         if (error) {
           reject(error);

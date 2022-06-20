@@ -7,7 +7,7 @@ const jwtAuth = require('../middlewares/jwtAuth');
 const upload = require('../middlewares/upload');
 const photoLimit = require('../middlewares/photoLimit');
 const {
-  list, detail, updatePhoto, updateProfile, getListChatRecruiter, getListChatWorker,
+  list, detail, updatePhoto, updateProfile, getListChatRecruiter, getListChatWorker, listNewWorker,
 } = require('../controllers/user.controller');
 
 const router = express.Router();
@@ -19,6 +19,7 @@ router
   .get('/user/chat/worker', jwtAuth, getListChatWorker)
   .get('/user/:id', jwtAuth, detail)
   .put('/user/:id/profile', jwtAuth, myself, validation.updateProfile, runValidation, socialValidation, updateProfile)
-  .put('/user/:id/photo', jwtAuth, myself, upload, photoLimit, updatePhoto);
+  .put('/user/:id/photo', jwtAuth, myself, upload, photoLimit, updatePhoto)
+  .get('/user/worker/new', listNewWorker);
 
 module.exports = router;

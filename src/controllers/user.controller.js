@@ -319,4 +319,21 @@ module.exports = {
       });
     }
   },
+  listNewWorker: async (req, res) => {
+    try {
+      const workers = await userModel.selectListNewWorker();
+
+      success(res, {
+        code: 200,
+        payload: workers.rows,
+        message: 'Select List New Worker Success',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
 };
