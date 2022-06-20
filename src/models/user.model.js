@@ -157,7 +157,7 @@ module.exports = {
   }),
   selectListNewWorker: () => new Promise((resolve, reject) => {
     db.query(
-      'SELECT users.id, users.name, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills, users.created_at FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true ORDER BY users.created_at DESC LIMIT 10',
+      'SELECT users.id, users.name, users.email, users.description, users.photo, users.address, users.phone, workers.job_desk, workers.skills, users.created_at FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true ORDER BY users.created_at DESC LIMIT 10',
       (error, result) => {
         if (error) {
           reject(error);
