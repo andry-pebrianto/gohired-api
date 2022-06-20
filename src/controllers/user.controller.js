@@ -3,6 +3,7 @@ const userModel = require('../models/user.model');
 const workerModel = require('../models/worker.model');
 const projectModel = require('../models/project.model');
 const experienceModel = require('../models/experience.model');
+const chatModel = require('../models/chat.model');
 const createPagination = require('../utils/createPagination');
 const uploadGoogleDrive = require('../utils/uploadGoogleDrive');
 const deleteGoogleDrive = require('../utils/deleteGoogleDrive');
@@ -261,10 +262,10 @@ module.exports = {
   },
   getListChatRecruiter: async (req, res) => {
     try {
-      const workers = await userModel.findBy('level', 2);
+      const workers = await userModel.listChatSelector(2);
 
       for (let i = 0; i < workers.rows.length; i++) {
-        const checkAlreadyChat = await userModel.listChat(
+        const checkAlreadyChat = await chatModel.listChat(
           req.APP_DATA.tokenDecoded.id,
           workers.rows[i].id,
         );
@@ -276,9 +277,11 @@ module.exports = {
         }
       }
 
+      const workersFilter = workers.rows.filter((item) => item.already_chat);
+
       success(res, {
         code: 200,
-        payload: workers.rows,
+        payload: workersFilter,
         message: 'Select List Chat Recruiter Success',
       });
     } catch (error) {
@@ -291,10 +294,10 @@ module.exports = {
   },
   getListChatWorker: async (req, res) => {
     try {
-      const recruiters = await userModel.findBy('level', 2);
+      const recruiters = await userModel.listChatSelector(1);
 
       for (let i = 0; i < recruiters.rows.length; i++) {
-        const checkAlreadyChat = await userModel.listChat(
+        const checkAlreadyChat = await chatModel.listChat(
           req.APP_DATA.tokenDecoded.id,
           recruiters.rows[i].id,
         );
@@ -306,9 +309,11 @@ module.exports = {
         }
       }
 
+      const recruitersFilter = recruiters.rows.filter((item) => item.already_chat);
+
       success(res, {
         code: 200,
-        payload: recruiters.rows,
+        payload: recruitersFilter,
         message: 'Select List Chat Worker Success',
       });
     } catch (error) {

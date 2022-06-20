@@ -131,6 +131,30 @@ module.exports = {
       },
     );
   }),
+  listChatSelector: (level) => new Promise((resolve, reject) => {
+    let sql = 'SELECT users.id, users.email, users.level, users.is_verified, users.photo, users.name,';
+
+    // recruiter
+    if (level === 1) {
+      sql += ' recruiters.position, recruiters.company_name FROM users INNER JOIN recruiters ON users.id=recruiters.user_id WHERE level=$1';
+    }
+
+    // worker
+    if (level === 3) {
+      sql += ' workers.company_name, workers.job_desk, workers.job_type FROM users INNER JOIN workers ON users.id=workers.user_id WHERE level=$1';
+    }
+
+    db.query(
+      sql,
+      [level],
+      (error, result) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+      },
+    );
+  }),
   selectListNewWorker: () => new Promise((resolve, reject) => {
     db.query(
       'SELECT users.id, users.name, users.email, users.photo, users.address, users.phone, workers.job_desk, workers.skills, users.created_at FROM users INNER JOIN workers ON users.id = workers.user_id WHERE users.is_verified=true ORDER BY users.created_at DESC LIMIT 10',
