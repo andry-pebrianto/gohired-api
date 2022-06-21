@@ -1,16 +1,19 @@
-const userModel = require('../models/user.model');
+const { v4: uuidv4 } = require('uuid');
 const chatModel = require('../models/chat.model');
 const { success, failed } = require('../utils/createResponse');
 
 module.exports = {
   insertInitialChat: async (req, res) => {
     try {
-      const { senderId, receiverId } = req.body;
+      const { sender, receiver, chat } = req.body;
 
-      const store = await userModel.findStoreBy('id', receiverId);
-      const user = await userModel.findBy('id', store.rows[0].user_id);
-
-      await chatModel.insertChat(senderId, user.rows[0].id, 'Halo, selamat siang.');
+      await chatModel.store({
+        id: uuidv4(),
+        sender,
+        receiver,
+        chat,
+        createdAt: new Date(),
+      });
 
       success(res, {
         code: 200,
