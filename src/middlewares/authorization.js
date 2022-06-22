@@ -137,4 +137,46 @@ module.exports = {
       });
     }
   },
+  onlyRecruiter: async (req, res, next) => {
+    try {
+      const user = await userModel.findBy('id', req.APP_DATA.tokenDecoded.id);
+
+      if (user.rows[0].level === 1) {
+        next();
+      } else {
+        failed(res, {
+          code: 401,
+          payload: 'You do not have access',
+          message: 'Unauthorized',
+        });
+      }
+    } catch (error) {
+      failed(res, {
+        code: 401,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  onlyWorker: async (req, res, next) => {
+    try {
+      const user = await userModel.findBy('id', req.APP_DATA.tokenDecoded.id);
+
+      if (user.rows[0].level === 2) {
+        next();
+      } else {
+        failed(res, {
+          code: 401,
+          payload: 'You do not have access',
+          message: 'Unauthorized',
+        });
+      }
+    } catch (error) {
+      failed(res, {
+        code: 401,
+        payload: error.message,
+        message: 'Internal Server Error',
+      });
+    }
+  },
 };
