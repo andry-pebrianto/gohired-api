@@ -48,6 +48,9 @@ module.exports = (io, socket) => {
       await chatModel.updateChat(chatId, chat);
       // select all chat related to sender & receiver
       const listChat = await chatModel.list(sender, receiver);
+      if (listChat.rows.length) {
+        listChat.rows[0].scroll = false;
+      }
 
       io.to(sender).emit('send-message-response', listChat.rows);
       io.to(receiver).emit('send-message-response', listChat.rows);
@@ -62,6 +65,9 @@ module.exports = (io, socket) => {
       await chatModel.deleteChat(chatId);
       // select all chat related to sender & receiver
       const listChat = await chatModel.list(sender, receiver);
+      if (listChat.rows.length) {
+        listChat.rows[0].scroll = false;
+      }
 
       io.to(sender).emit('send-message-response', listChat.rows);
       io.to(receiver).emit('send-message-response', listChat.rows);
