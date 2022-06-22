@@ -265,7 +265,7 @@ module.exports = {
       const workers = await userModel.listChatSelector(2);
 
       for (let i = 0; i < workers.rows.length; i++) {
-        const checkAlreadyChat = await chatModel.listChat(
+        const checkAlreadyChat = await chatModel.list(
           req.APP_DATA.tokenDecoded.id,
           workers.rows[i].id,
         );
@@ -297,7 +297,7 @@ module.exports = {
       const recruiters = await userModel.listChatSelector(1);
 
       for (let i = 0; i < recruiters.rows.length; i++) {
-        const checkAlreadyChat = await chatModel.listChat(
+        const checkAlreadyChat = await chatModel.list(
           req.APP_DATA.tokenDecoded.id,
           recruiters.rows[i].id,
         );
