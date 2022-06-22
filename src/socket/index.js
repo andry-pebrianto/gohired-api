@@ -49,7 +49,7 @@ module.exports = (io, socket) => {
       // select all chat related to sender & receiver
       const listChat = await chatModel.list(sender, receiver);
       if (listChat.rows.length) {
-        listChat.rows[0].scroll = false;
+        listChat.rows[0].noScroll = true;
       }
 
       io.to(sender).emit('send-message-response', listChat.rows);
@@ -66,7 +66,7 @@ module.exports = (io, socket) => {
       // select all chat related to sender & receiver
       const listChat = await chatModel.list(sender, receiver);
       if (listChat.rows.length) {
-        listChat.rows[0].scroll = false;
+        listChat.rows[0].noScroll = true;
       }
 
       io.to(sender).emit('send-message-response', listChat.rows);
