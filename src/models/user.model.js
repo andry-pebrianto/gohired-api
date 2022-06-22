@@ -140,7 +140,7 @@ module.exports = {
     }
 
     // worker
-    if (level === 3) {
+    if (level === 2) {
       sql += ' workers.company_name, workers.job_desk, workers.job_type FROM users INNER JOIN workers ON users.id=workers.user_id WHERE level=$1';
     }
 
