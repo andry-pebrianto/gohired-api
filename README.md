@@ -70,7 +70,7 @@ DRIVE_REFRESH_TOKEN=
 ## Related Project
 
 - [GoHired Client](https://github.com/andry-pebrianto/gohired-client)
-- [GoHired Demo](https://gohired.netlify.app)
+- [GoHired Demo](https://gohired.vercel.app)
 
 ## Authors
 
