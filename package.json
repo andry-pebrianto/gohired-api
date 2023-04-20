@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "migrate": "node-pg-migrate"
   },
   "keywords": [
     "API",
@@ -27,6 +28,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "multer": "^1.4.4",
+    "node-pg-migrate": "^6.2.2",
     "nodemailer": "^6.7.5",
     "pg": "^8.7.3",
     "socket.io": "^4.5.1",
@@ -37,6 +39,7 @@
   "devDependencies": {
     "eslint": "^8.15.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0"
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.22"
   }
 }
