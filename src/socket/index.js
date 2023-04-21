@@ -1,4 +1,3 @@
-const { v4: uuidv4 } = require('uuid');
 const chatModel = require('../models/chat.model');
 
 module.exports = (io, socket) => {
@@ -22,10 +21,12 @@ module.exports = (io, socket) => {
   });
   socket.on('send-message', async (data) => {
     try {
-      const { sender, receiver, chat } = data;
+      const {
+        id, sender, receiver, chat,
+      } = data;
       // insert new chat
       await chatModel.store({
-        id: uuidv4(),
+        id,
         sender,
         receiver,
         chat,
