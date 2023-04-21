@@ -3,7 +3,7 @@
 </div>
 <h3 align="center">GoHired API</h3>
 <p align="center">
-  <a href="https://gohired.herokuapp.com/">View API Demo</a>
+  <a href="https://gohired-api.onrender.com/">View API Demo</a>
   ·
   <a href="https://github.com/andry-pebrianto/gohired-api/issues">Report Bug</a>
 </p>
