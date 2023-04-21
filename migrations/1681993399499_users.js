@@ -50,16 +50,17 @@ exports.up = (pgm) => {
       type: "INTEGER",
       default: 2,
     },
-    is_verified: {
-      type: "INTEGER",
-      default: 0,
-    },
     created_at: {
       type: "timestamp with time zone",
       notNull: true,
       default: pgm.func("current_timestamp"),
     },
   });
+
+  pgm.sql(`
+    ALTER TABLE users
+    ADD COLUMN is_verified BOOLEAN DEFAULT FALSE;
+  `);
 };
 
 exports.down = (pgm) => {

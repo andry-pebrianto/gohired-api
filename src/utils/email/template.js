@@ -52,7 +52,7 @@ const htmlTemplateTop = `
   <title>Verify Your Account!</title>
 </head>
 
-<body style="background-color: #5E50A1; padding: 20px;">
+<body style="background-color: #3E54AC; padding: 20px;">
   <h1 class="auth-title">
     GoHired
   </h1>
