@@ -27,12 +27,12 @@ module.exports = {
   }),
   addProject: (data) => new Promise((resolve, reject) => {
     const {
-      id, title, photo, app_type, repo, userId, createdAt,
+      id, title, jobType, photo, app_type, repo, userId, createdAt,
     } = data;
 
     db.query(
       'INSERT INTO projects (id, title, photo, app_type, repo, user_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-      [id, title, photo, app_type, repo, userId, createdAt],
+      [id, title, photo, jobType, repo, userId, createdAt],
       (error, result) => {
         if (error) {
           reject(error);
